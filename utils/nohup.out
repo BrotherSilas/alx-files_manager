@@ -8,3 +8,8 @@
 5244:M 10 Dec 04:20:33.633 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
 5244:M 10 Dec 04:20:33.633 * DB loaded from disk: 0.000 seconds
 5244:M 10 Dec 04:20:33.633 * Ready to accept connections
+5244:M 10 Dec 05:20:34.081 * 1 changes in 3600 seconds. Saving...
+5244:M 10 Dec 05:20:34.081 * Background saving started by pid 5515
+5515:C 10 Dec 05:20:34.085 * DB saved on disk
+5515:C 10 Dec 05:20:34.086 * RDB: 0 MB of memory used by copy-on-write
+5244:M 10 Dec 05:20:34.182 * Background saving terminated with success
