@@ -1,0 +1,10 @@
+5244:C 10 Dec 04:20:33.631 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+5244:C 10 Dec 04:20:33.631 # Redis version=4.0.9, bits=64, commit=00000000, modified=0, pid=5244, just started
+5244:C 10 Dec 04:20:33.631 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+5244:M 10 Dec 04:20:33.632 * Running mode=standalone, port=6379.
+5244:M 10 Dec 04:20:33.633 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+5244:M 10 Dec 04:20:33.633 # Server initialized
+5244:M 10 Dec 04:20:33.633 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+5244:M 10 Dec 04:20:33.633 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+5244:M 10 Dec 04:20:33.633 * DB loaded from disk: 0.000 seconds
+5244:M 10 Dec 04:20:33.633 * Ready to accept connections
