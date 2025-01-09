@@ -1,10 +1,9 @@
-/ tests/endpoints.test.js
 import { expect } from 'chai';
 import request from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
-import app from '../server.js';
-import redisClient from '../utils/redis.js';
-import dbClient from '../utils/db.js';
+import app from '../server';
+import redisClient from '../utils/redis';
+import dbClient from '../utils/db';
 
 describe('API Endpoints', () => {
     let token;
@@ -17,6 +16,21 @@ describe('API Endpoints', () => {
         for (const collection of collections) {
             await dbClient.db.collection(collection.name).deleteMany({});
         }
+
+        // Create a test user
+        const userResponse = await request(app)
+            .post('/users')
+            .send({
+                email: 'test@example.com',
+                password: 'testpassword123'
+            });
+        userId = userResponse.body.id;
+
+        // Authenticate the user to get a token
+        const authResponse = await request(app)
+            .get('/connect')
+            .auth('test@example.com', 'testpassword123', { type: 'basic' });
+        token = authResponse.body.token;
     });
 
     describe('GET /status', () => {
@@ -44,13 +58,12 @@ describe('API Endpoints', () => {
             const res = await request(app)
                 .post('/users')
                 .send({
-                    email: 'test@test.com',
-                    password: 'testpassword'
+                    email: 'test2@example.com',
+                    password: 'testpassword123'
                 });
             expect(res.status).to.equal(201);
             expect(res.body).to.have.property('id');
-            expect(res.body).to.have.property('email', 'test@test.com');
-            userId = res.body.id;
+            expect(res.body).to.have.property('email', 'test2@example.com');
         });
 
         it('should return error if email is missing', async () => {
@@ -64,13 +77,12 @@ describe('API Endpoints', () => {
 
     describe('GET /connect', () => {
         it('should authenticate user and return token', async () => {
-            const credentials = Buffer.from('test@test.com:testpassword').toString('base64');
+            const credentials = Buffer.from('test@example.com:testpassword123').toString('base64');
             const res = await request(app)
                 .get('/connect')
                 .set('Authorization', `Basic ${credentials}`);
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('token');
-            token = res.body.token;
         });
     });
 
@@ -89,8 +101,8 @@ describe('API Endpoints', () => {
                 .get('/users/me')
                 .set('X-Token', token);
             expect(res.status).to.equal(200);
-            expect(res.body).to.have.property('email', 'test@test.com');
-            expect(res.body).to.have.property('id');
+            expect(res.body).to.have.property('email', 'test@example.com');
+            expect(res.body).to.have.property('id', userId);
         });
     });
 
@@ -161,3 +173,4 @@ describe('API Endpoints', () => {
         });
     });
 });
+
