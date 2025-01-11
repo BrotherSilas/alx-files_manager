@@ -7,21 +7,29 @@ import dbClient from './utils/db.js';
 const fileQueue = new Queue('fileQueue');
 const userQueue = new Queue('userQueue');
 
+const generateThumbnail = async (path, width) => {
+  try {
+    const thumbnail = await imageThumbnail(path, { width });
+    const thumbnailPath = `${path}_${width}`;
+    await fs.promises.writeFile(thumbnailPath, thumbnail);
+    return thumbnailPath;
+  } catch (error) {
+    console.error(`Error generating thumbnail: ${error}`);
+    throw error;
+  }
+};
+
 fileQueue.process(async (job) => {
   const { fileId, userId } = job.data;
 
-  if (!fileId) {
-    throw new Error('Missing fileId');
-  }
-  if (!userId) {
-    throw new Error('Missing userId');
+  if (!fileId || !userId) {
+    throw new Error('Missing required fields');
   }
 
-  const file = await dbClient.db.collection('files')
-    .findOne({ 
-      _id: ObjectId(fileId), 
-      userId: ObjectId(userId) 
-    });
+  const file = await dbClient.files.findOne({
+    _id: ObjectId(fileId),
+    userId: ObjectId(userId)
+  });
 
   if (!file) {
     throw new Error('File not found');
@@ -29,11 +37,12 @@ fileQueue.process(async (job) => {
 
   const sizes = [500, 250, 100];
   
-  // Generate thumbnails for each size
-  for (const width of sizes) {
-    const thumbnail = await imageThumbnail(file.localPath, { width });
-    const thumbnailPath = `${file.localPath}_${width}`;
-    await fs.promises.writeFile(thumbnailPath, thumbnail);
+  try {
+    const thumbnailPromises = sizes.map(width => generateThumbnail(file.localPath, width));
+    await Promise.all(thumbnailPromises);
+  } catch (error) {
+    console.error('Thumbnail generation failed:', error);
+    throw error;
   }
 });
 
@@ -44,12 +53,14 @@ userQueue.process(async (job) => {
     throw new Error('Missing userId');
   }
 
-  const user = await dbClient.db.collection('users')
-    .findOne({ _id: ObjectId(userId) });
+  const user = await dbClient.users.findOne({ _id: ObjectId(userId) });
 
   if (!user) {
     throw new Error('User not found');
   }
 
+  // Could be replaced with actual email sending logic
   console.log(`Welcome ${user.email}!`);
 });
+
+export { fileQueue, userQueue };

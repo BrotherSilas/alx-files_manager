@@ -1,23 +1,30 @@
-module.exports = {
-  env: {
-    browser: true,  // For browser-based code
-    node: true,     // For Node.js-based code
-    es2021: true    // Use modern JavaScript features
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2021": true,
+    "mocha": true
   },
-  extends: [
-    'eslint:recommended', // Use recommended rules by ESLint
-    'plugin:node/recommended' // Add rules specific to Node.js (optional)
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base"
   ],
-  parserOptions: {
-    ecmaVersion: 12, // Support ES2021 features
-    sourceType: 'module' // Use ES Modules (import/export)
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
   },
-  rules: {
-    'semi': ['error', 'always'],          // Enforce semicolons
-    'quotes': ['error', 'single'],       // Enforce single quotes
-    'no-console': 'off',                 // Allow console.log (turn off this rule)
-    'indent': ['error', 2],              // Enforce 2-space indentation
-    'linebreak-style': ['error', 'unix'] // Enforce Unix line endings
+  "rules": {
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"],
+    "no-console": "off",
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "always"
+      }
+    ]
   }
-};
-
+}
